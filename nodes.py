@@ -91,13 +91,19 @@ class Nodes:
 
     def write(self):
         nodes = open('debug_nodes.csv', mode='w')
-        print('id, label, start, end', file=nodes)
-        for n in self.nodes:
-            print(f'{n.id}, {n.label}, {n.interval[0]}, {n.interval[1]}', file=nodes)
+        print('iteration, action, id, label', file=nodes)
         edges = open('debug_edges.csv', mode='w')
-        print('id, label, start, end, source, target', file=edges)
-        for e in self.edges:
-            print(f'{e.id}, {e.label}, {n.interval[0]}, {n.interval[1]}, {e.source}, {e.target}', file=edges)
+        print('iteration, action, id, label, source, target', file=edges)
+        for i, step in enumerate(self.steps):
+            for n in step['rnodes']:
+                print(f'{i}, remove, {n},',  file=nodes)
+                for e in range(3*n,3*n+3):
+                    print(f'{i}, remove, {e}, , ,', file=edges)
+            for n in step['mnodes']:
+                print(f'{i}, insert, {n}, {self.nodes[n].label}',  file=nodes)
+                for e in range(3*n,3*n+3):
+                    edge = self.edges[e]
+                    print(f'{i}, insert, {e}, {edge.label}, {edge.source}, {edge.target}', file=edges)
 
 if __name__ == '__main__':
     Nodes().write()
